@@ -16,6 +16,9 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.entity.Player;
+import org.bukkit.Sound;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 
 public class BackpackListener implements Listener {
 
@@ -87,13 +90,23 @@ public class BackpackListener implements Listener {
         if (!BackpackItemUtil.isBackpackItem(plugin, item)) {
             return;
         }
+        Player player = event.getPlayer();
+        if (player.isSneaking()) {
+            event.setCancelled(true);
+            boolean enabled = BackpackItemUtil.toggleAutoPickup(plugin, item);
+            player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1f, enabled ? 1.4f : 0.8f);
+            Component msg = Component.text("Backpack item pickup ", NamedTextColor.GRAY)
+                    .append(Component.text(enabled ? "enabled" : "disabled", enabled ? NamedTextColor.GREEN : NamedTextColor.RED));
+            player.sendActionBar(msg);
+            return;
+        }
         event.setCancelled(true); // prevent placing/using as chest
         BackpackTier tier = BackpackItemUtil.getTier(plugin, item);
         if (tier == null) {
             tier = BackpackTier.LEATHER;
         }
         var id = BackpackItemUtil.getOrCreateId(plugin, item);
-        plugin.getBackpackManager().openBackpack(event.getPlayer(), id, tier);
+        plugin.getBackpackManager().openBackpack(player, id, tier);
     }
 
     @EventHandler

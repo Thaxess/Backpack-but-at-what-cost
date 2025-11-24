@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class BackpackManager {
 
@@ -174,5 +175,12 @@ public class BackpackManager {
         for (int i = tier.getUsableSlots(); i < inv.getSize(); i++) {
             inv.setItem(i, BackpackItemUtil.createFiller(plugin));
         }
+    }
+
+    public ItemStack depositItem(UUID backpackId, BackpackTier tier, ItemStack stack) {
+        if (stack == null || stack.getType() == org.bukkit.Material.AIR) return null;
+        Inventory inv = getBackpack(backpackId, tier);
+        Map<Integer, ItemStack> leftover = inv.addItem(stack);
+        return leftover.values().stream().findFirst().orElse(null);
     }
 }

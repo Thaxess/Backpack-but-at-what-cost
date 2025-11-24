@@ -1,6 +1,10 @@
 package com.zack.backpackcost.listener;
 
 import com.zack.backpackcost.BackpackPlugin;
+import com.zack.backpackcost.model.BackpackManager;
+import com.zack.backpackcost.util.BackpackItemUtil;
+import com.zack.backpackcost.util.BackpackTier;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -11,6 +15,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerAttemptPickupItemEvent;
 import org.bukkit.event.player.PlayerToggleSprintEvent;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.inventory.ItemStack;
 
 public class WeightListener implements Listener {
 
@@ -33,7 +38,40 @@ public class WeightListener implements Listener {
 
     @EventHandler
     public void onPickup(PlayerAttemptPickupItemEvent event) {
-        scheduleUpdate(event.getPlayer());
+        Player player = event.getPlayer();
+        Item item = event.getItem();
+        ItemStack stack = item.getItemStack();
+        if (BackpackItemUtil.isBackpackItem(plugin, stack) && !plugin.getConfig().getBoolean("backpack.allow-nesting", false)) {
+            scheduleUpdate(player);
+            return;
+        }
+        if (player.getInventory().firstEmpty() != -1) {
+            scheduleUpdate(player);
+            return;
+        }
+
+        // Inventory is full; try auto-pick into an enabled backpack.
+        ItemStack remaining = stack.clone();
+        for (ItemStack invItem : player.getInventory().getContents()) {
+            if (!BackpackItemUtil.isBackpackItem(plugin, invItem)) continue;
+            if (!BackpackItemUtil.isAutoPickupEnabled(plugin, invItem)) continue;
+            BackpackTier tier = BackpackItemUtil.getTier(plugin, invItem);
+            if (tier == null) tier = BackpackTier.LEATHER;
+            var id = BackpackItemUtil.getOrCreateId(plugin, invItem);
+            BackpackManager manager = plugin.getBackpackManager();
+            remaining = manager.depositItem(id, tier, remaining);
+            if (remaining == null || remaining.getAmount() <= 0) {
+                break;
+            }
+        }
+
+        if (remaining == null || remaining.getAmount() <= 0) {
+            event.setCancelled(true);
+            item.remove();
+        } else {
+            item.setItemStack(remaining);
+        }
+        scheduleUpdate(player);
     }
 
     @EventHandler

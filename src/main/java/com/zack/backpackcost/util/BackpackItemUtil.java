@@ -20,10 +20,11 @@ public final class BackpackItemUtil {
     private static final String KEY_ID = "backpack-id";
     private static final String KEY_TIER = "backpack-tier";
     private static final String KEY_FILLER = "backpack-filler";
+    private static final String KEY_AUTOPICK = "backpack-autopick";
 
     private BackpackItemUtil() {}
 
-    public static ItemStack createItem(BackpackPlugin plugin, BackpackTier tier, UUID id) {
+    public static ItemStack createItem(BackpackPlugin plugin, BackpackTier tier, UUID id, boolean autoPickup) {
         ItemStack item = new ItemStack(Material.CHEST);
         ItemMeta meta = item.getItemMeta();
         if (meta == null) {
@@ -47,6 +48,7 @@ public final class BackpackItemUtil {
         meta.getPersistentDataContainer().set(getKey(plugin, KEY_ITEM), PersistentDataType.BYTE, (byte) 1);
         meta.getPersistentDataContainer().set(getKey(plugin, KEY_ID), PersistentDataType.STRING, id.toString());
         meta.getPersistentDataContainer().set(getKey(plugin, KEY_TIER), PersistentDataType.STRING, tier.name());
+        meta.getPersistentDataContainer().set(getKey(plugin, KEY_AUTOPICK), PersistentDataType.BYTE, (byte) (autoPickup ? 1 : 0));
         item.setItemMeta(meta);
         return item;
     }
@@ -61,6 +63,22 @@ public final class BackpackItemUtil {
         }
         Byte marker = meta.getPersistentDataContainer().get(getKey(plugin, KEY_ITEM), PersistentDataType.BYTE);
         return marker != null && marker == (byte) 1;
+    }
+
+    public static boolean isAutoPickupEnabled(BackpackPlugin plugin, ItemStack stack) {
+        if (!isBackpackItem(plugin, stack)) return false;
+        ItemMeta meta = stack.getItemMeta();
+        Byte val = meta.getPersistentDataContainer().get(getKey(plugin, KEY_AUTOPICK), PersistentDataType.BYTE);
+        return val != null && val == (byte) 1;
+    }
+
+    public static boolean toggleAutoPickup(BackpackPlugin plugin, ItemStack stack) {
+        if (!isBackpackItem(plugin, stack)) return false;
+        ItemMeta meta = stack.getItemMeta();
+        byte next = (byte) (isAutoPickupEnabled(plugin, stack) ? 0 : 1);
+        meta.getPersistentDataContainer().set(getKey(plugin, KEY_AUTOPICK), PersistentDataType.BYTE, next);
+        stack.setItemMeta(meta);
+        return next == (byte) 1;
     }
 
     public static BackpackTier getTier(BackpackPlugin plugin, ItemStack stack) {

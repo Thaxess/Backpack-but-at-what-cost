@@ -33,7 +33,7 @@ public class BackpackCraftListener implements Listener {
         // Base leather backpack
         if (isPattern(matrix, Material.LEATHER, Material.CHEST, null)) {
             UUID id = UUID.randomUUID();
-            inv.setResult(BackpackItemUtil.createItem(plugin, BackpackTier.LEATHER, id));
+            inv.setResult(BackpackItemUtil.createItem(plugin, BackpackTier.LEATHER, id, false));
             return;
         }
 
@@ -52,7 +52,8 @@ public class BackpackCraftListener implements Listener {
         UUID id = BackpackItemUtil.getOrCreateId(plugin, center);
         BackpackManager manager = plugin.getBackpackManager();
         manager.upgradeTier(id, to);
-        inv.setResult(BackpackItemUtil.createItem(plugin, to, id));
+        boolean auto = BackpackItemUtil.isAutoPickupEnabled(plugin, center);
+        inv.setResult(BackpackItemUtil.createItem(plugin, to, id, auto));
         return true;
     }
 
