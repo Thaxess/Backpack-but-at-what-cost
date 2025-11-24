@@ -1,0 +1,21 @@
+name: backpack-but-at-what-cost
+main: com.zack.backpackcost.BackpackPlugin
+version: ${version}
+author: Zack
+api-version: 1.21
+description: Backpacks with a custom weight system that affects movement.
+commands:
+  backpack:
+    description: Opens your backpack or administrates backpacks.
+    usage: /backpack [player|reload]
+    aliases: [bp]
+permissions:
+  backpack.use:
+    description: Allows opening own backpack.
+    default: true
+  backpack.others:
+    description: Allows opening others' backpacks.
+    default: op
+  backpack.reload:
+    description: Allows reloading the plugin configuration.
+    default: op

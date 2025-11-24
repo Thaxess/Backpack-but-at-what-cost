@@ -1,0 +1,8 @@
+com/zack/backpackcost/model/BackpackHolder.class
+com/zack/backpackcost/listener/WeightListener.class
+com/zack/backpackcost/listener/WeightListener$1.class
+com/zack/backpackcost/listener/BackpackListener.class
+com/zack/backpackcost/util/WeightManager.class
+com/zack/backpackcost/model/BackpackManager.class
+com/zack/backpackcost/BackpackPlugin.class
+com/zack/backpackcost/command/BackpackCommand.class

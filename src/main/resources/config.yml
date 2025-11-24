@@ -1,0 +1,48 @@
+backpack:
+  rows: 2 # 18 slots
+  title: "&6Backpack"
+  item-name: "&6Backpack"
+  item-lore:
+    - "&7Portable storage"
+    - "&7Heavier as you fill it"
+  allow-place-blocks: false
+  allow-nesting: false
+
+weight:
+  # baseline a bit heavier; only backpack contents count toward weight (scaled by tier)
+  default-per-item: 0.05
+  backpack-item-weight: 6.0
+  material-weights:
+    NETHERITE_INGOT: 0.18
+    NETHERITE_SWORD: 0.24
+    DIAMOND: 0.12
+    DIAMOND_SWORD: 0.16
+    IRON_INGOT: 0.08
+    GOLD_INGOT: 0.07
+    EMERALD: 0.07
+    COPPER_INGOT: 0.06
+    COAL: 0.04
+    COBBLESTONE: 0.03
+    STONE: 0.035
+    OBSIDIAN: 0.14
+    ENCHANTED_GOLDEN_APPLE: 0.16
+    ENDER_CHEST: 0.2
+  thresholds:
+    slowness-1: 40.0
+    slowness-2: 80.0
+    slowness-3: 120.0
+
+messages:
+  opened: "&aBackpack opened. Weight: &e%weight%&7/&e%threshold%"
+  reloaded: "&aBackpack, but at what cost? reloaded."
+  too-heavy: "&cYou are too heavy to sprint! (%weight%)"
+  no-permission: "&cYou don't have permission."
+  player-not-found: "&cPlayer not found."
+  invalid-number: "&cInvalid number."
+
+storage:
+  file: "backpacks.yml"
+
+penalties:
+  potion-duration-ticks: 60
+  check-interval-ticks: 20
