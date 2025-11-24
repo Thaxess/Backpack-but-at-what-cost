@@ -1,0 +1,2 @@
+# Backpack, but at what cost?
+A Minecraft backpack plugin where every item has weight. Carry more… but suffer the consequences.  Backpack, but at what cost? adds custom backpacks with a unique weight mechanic: the heavier your inventory, the harder it becomes to move. Stacking loot is no longer free — gear, ores, and items all affect your mobility.  Perfect for survival, RPG, grinding servers, and economy-style worlds.
