@@ -1,0 +1,10 @@
+{
+  "parent": "minecraft:item/chest",
+  "overrides": [
+    { "predicate": { "custom_model_data": 10001 }, "model": "minecraft:item/backpack_leather" },
+    { "predicate": { "custom_model_data": 10002 }, "model": "minecraft:item/backpack_iron" },
+    { "predicate": { "custom_model_data": 10003 }, "model": "minecraft:item/backpack_gold" },
+    { "predicate": { "custom_model_data": 10004 }, "model": "minecraft:item/backpack_diamond" },
+    { "predicate": { "custom_model_data": 10005 }, "model": "minecraft:item/backpack_netherite" }
+  ]
+}

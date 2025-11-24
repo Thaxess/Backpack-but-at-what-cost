@@ -90,6 +90,7 @@ public class BackpackListener implements Listener {
         if (!BackpackItemUtil.isBackpackItem(plugin, item)) {
             return;
         }
+        BackpackItemUtil.ensureModelData(plugin, item);
         Player player = event.getPlayer();
         if (player.isSneaking()) {
             event.setCancelled(true);
@@ -120,7 +121,7 @@ public class BackpackListener implements Listener {
 
     private BackpackTier getTier(Inventory top) {
         if (top.getHolder() instanceof BackpackHolder holder) {
-            return holder.getTier();
+            return plugin.getBackpackManager().getTier(holder.getBackpackId(), holder.getTier());
         }
         return BackpackTier.LEATHER;
     }

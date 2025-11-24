@@ -120,7 +120,7 @@ public class BackpackManager {
             if (raw instanceof java.util.List<?>) {
                 @SuppressWarnings("unchecked")
                 java.util.List<Object> list = (java.util.List<Object>) raw;
-                ItemStack[] items = list.toArray(new ItemStack[0]);
+                ItemStack[] items = list.toArray(new ItemStack[Math.max(list.size(), inventory.getSize())]);
                 inventory.setContents(items);
             }
         }
@@ -171,6 +171,12 @@ public class BackpackManager {
     }
 
     private void applyLayout(Inventory inv, BackpackTier tier) {
+        // Clear fillers that should become usable for higher tiers.
+        for (int i = 0; i < Math.min(inv.getSize(), tier.getUsableSlots()); i++) {
+            if (BackpackItemUtil.isFiller(plugin, inv.getItem(i))) {
+                inv.setItem(i, null);
+            }
+        }
         if (tier.getUsableSlots() >= inv.getSize()) return;
         for (int i = tier.getUsableSlots(); i < inv.getSize(); i++) {
             inv.setItem(i, BackpackItemUtil.createFiller(plugin));

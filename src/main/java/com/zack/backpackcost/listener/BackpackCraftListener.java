@@ -51,6 +51,8 @@ public class BackpackCraftListener implements Listener {
         if (tier != from) return false;
         UUID id = BackpackItemUtil.getOrCreateId(plugin, center);
         BackpackManager manager = plugin.getBackpackManager();
+        // Persist contents before changing size/tier so items transfer.
+        manager.saveContents(id, manager.getBackpack(id, from), from);
         manager.upgradeTier(id, to);
         boolean auto = BackpackItemUtil.isAutoPickupEnabled(plugin, center);
         inv.setResult(BackpackItemUtil.createItem(plugin, to, id, auto));

@@ -33,18 +33,12 @@ public final class BackpackItemUtil {
         meta.setDisplayName(color("&6" + tier.getDisplayName()));
         List<String> lore = new ArrayList<>();
         lore.add(color("&7" + tier.getDefaultLore()));
-        switch (tier) {
-            case DIAMOND:
-                lore.add(color("&7Shiny"));
-                break;
-            case NETHERITE:
-                lore.add(color("&7Despite being made out of netherite, it doesn't weigh that much"));
-                break;
-            default:
-                break;
+        if (tier == BackpackTier.NETHERITE) {
+            lore.add(color("&7Despite being made out of netherite, it doesn't weigh that much"));
         }
         meta.setLore(lore);
         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        meta.setCustomModelData(tier.getCustomModelData());
         meta.getPersistentDataContainer().set(getKey(plugin, KEY_ITEM), PersistentDataType.BYTE, (byte) 1);
         meta.getPersistentDataContainer().set(getKey(plugin, KEY_ID), PersistentDataType.STRING, id.toString());
         meta.getPersistentDataContainer().set(getKey(plugin, KEY_TIER), PersistentDataType.STRING, tier.name());
@@ -79,6 +73,25 @@ public final class BackpackItemUtil {
         meta.getPersistentDataContainer().set(getKey(plugin, KEY_AUTOPICK), PersistentDataType.BYTE, next);
         stack.setItemMeta(meta);
         return next == (byte) 1;
+    }
+
+    public static void ensureModelData(BackpackPlugin plugin, ItemStack stack) {
+        if (!isBackpackItem(plugin, stack)) return;
+        ItemMeta meta = stack.getItemMeta();
+        BackpackTier tier = getTier(plugin, stack);
+        if (tier == null || meta == null) return;
+        Integer cmd = meta.hasCustomModelData() ? meta.getCustomModelData() : null;
+        if (cmd == null || cmd != tier.getCustomModelData()) {
+            meta.setCustomModelData(tier.getCustomModelData());
+            stack.setItemMeta(meta);
+        }
+    }
+
+    public static void refreshInventoryModels(BackpackPlugin plugin, org.bukkit.inventory.Inventory inv) {
+        for (int i = 0; i < inv.getSize(); i++) {
+            ItemStack stack = inv.getItem(i);
+            ensureModelData(plugin, stack);
+        }
     }
 
     public static BackpackTier getTier(BackpackPlugin plugin, ItemStack stack) {

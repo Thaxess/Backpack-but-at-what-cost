@@ -28,6 +28,8 @@ public class WeightListener implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         plugin.getWeightManager().updatePlayer(event.getPlayer());
+        plugin.sendResourcePack(event.getPlayer());
+        plugin.refreshBackpackModels(event.getPlayer());
     }
 
     @EventHandler

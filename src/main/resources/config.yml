@@ -46,3 +46,10 @@ storage:
 penalties:
   potion-duration-ticks: 60
   check-interval-ticks: 20
+
+resource-pack:
+  enabled: true
+  required: true
+  url: "https://www.dropbox.com/scl/fi/3ierwg4boy421amqfknmd/backpack-pack.zip?rlkey=doez4bufjzde6opcrausckgvl&dl=1"
+  sha1: "019440e51d390fd812daa5868d52cf74912cdba6"
+  prompt: "&6This server provides backpack textures. Please accept to see custom icons."
